@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+model Profile {
+  id              String           @id @default(uuid())
+  username        String           @unique
+  personalBooks   PersonalBook[]
+  booksLists      BookList[]
+  readingSessions ReadingSession[]
+  bookLibrary     Book[]
+}
+
+model Genre {
+  id          String @id @default(uuid())
+  title       String @unique
+  description String
+
+  Book   Book?   @relation(fields: [bookId], references: [id])
+  bookId String?
+}
+
+model Author {
+  id          String  @id @default(uuid())
+  fullName    String
+  authorImage String
+  years       String
+  Book        Book[]
+  bio         String?
+}
+
+model PersonalBook {
+  id          String    @id @default(uuid())
+  book        Book      @relation(fields: [bookId], references: [id])
+  bookId      String
+  Profile     Profile?  @relation(fields: [profileId], references: [id])
+  profileId   String?
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  pagesDone   Int       @default(0)
+}
+
+model BookList {
+  id          String  @id @default(uuid())
+  book        Book    @relation(fields: [bookId], references: [id])
+  bookId      String
+  description String
+  cover       String?
+
+  Profile Profile[]
+}
+
+model ReadingSession {
+  id         String   @id @default(uuid())
+  pagesCount Int
+  book       Book     @relation(fields: [bookId], references: [id])
+  bookId     String
+  createdAt  DateTime @default(now())
+  Profile    Profile? @relation(fields: [profileId], references: [id])
+  profileId  String?
+}
+
+model Book {
+  id             String           @id @default(uuid())
+  title          String           @unique
+  genres         Genre[]
+  description    String?
+  author         Author           @relation(fields: [authorId], references: [id])
+  releaseYear    Int
+  authorId       String
+  adRelease      Boolean          @default(true)
+  paperPages     Int
+  pages          Int
+  PersonalBook   PersonalBook[]
+  ReadingSession ReadingSession[]
+  BookList       BookList[]
+  Profile        Profile?         @relation(fields: [profileId], references: [id])
+  profileId      String?
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}

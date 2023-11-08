@@ -1,5 +1,4 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import { constrainedMemory } from 'process';
 import type { AppRouter } from '../'
 //     👆 **type-only** import
 
@@ -13,10 +12,26 @@ const trpc = createTRPCProxyClient<AppRouter>({
     ],
 });
 
+async function getBooksList() {
+    return trpc.booksList.query()
+}
+
+async function addBookToLibrary(profileId: string, bookId: string) {
+    return trpc.addToLibrary.query({
+        profileId,
+        bookId
+    })
+}
+
+async function getMyLibrary(profileId: string) {
+    return trpc.getMyLibrary.query(profileId)
+}
+
 (async () => {
-    const res = await trpc.booksList.query()
 
-    const bookId = res[0]?.id
+    const myProfileId = 'e4cc1a59-4843-4c13-be33-ffa88d5207b3'
+    const library = await getMyLibrary(myProfileId)
 
-    console.log(bookId)
+    console.log(library.books)
+
 })()

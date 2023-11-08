@@ -1,12 +1,12 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 model Profile {
-  id              String           @id @default(uuid())
-  username        String           @unique
+  id              String            @id @default(uuid())
+  username        String            @unique
   personalBooks   PersonalBook[]
   booksLists      BookList[]
   readingSessions ReadingSession[]
-  bookLibrary     Book[]
+  books           BooksOnProfiles[]
 }
 
 model Genre {
@@ -59,21 +59,29 @@ model ReadingSession {
 }
 
 model Book {
-  id             String           @id @default(uuid())
-  title          String           @unique
+  id             String            @id @default(uuid())
+  title          String            @unique
   genres         Genre[]
   description    String?
-  author         Author           @relation(fields: [authorId], references: [id])
+  author         Author            @relation(fields: [authorId], references: [id])
   releaseYear    Int
   authorId       String
-  adRelease      Boolean          @default(true)
+  adRelease      Boolean           @default(true)
   paperPages     Int
   pages          Int
   PersonalBook   PersonalBook[]
   ReadingSession ReadingSession[]
   BookList       BookList[]
-  Profile        Profile?         @relation(fields: [profileId], references: [id])
-  profileId      String?
+  profiles       BooksOnProfiles[]
+}
+
+model BooksOnProfiles {
+  book      Book    @relation(fields: [bookId], references: [id])
+  profile   Profile @relation(fields: [profileId], references: [id])
+  bookId    String
+  profileId String
+
+  @@id([bookId, profileId])
 }
 
 generator client {

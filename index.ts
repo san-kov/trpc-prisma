@@ -34,25 +34,46 @@ const appRouter = router({
                 })
             }
 
-            await prisma.profile.update({
-                where: {
-                    id: profileId
-                },
+            await prisma.booksOnProfiles.create({
                 data: {
-                    bookLibrary: {
-                        connect: {
-                            id: bookId
-                        }
-                    }
+                    bookId,
+                    profileId
                 }
             })
 
+            return book
         }),
-    userCreate: publicProcedure
-        .input(z.object({ name: z.string() }))
-        .mutation(async (opts) => {
-            return {}
+    getMyProfile: publicProcedure
+        .query(async () => {
+            const profile = await prisma.profile.findFirst()
+
+            return profile
+        }),
+    getMyLibrary: publicProcedure.input(z.string()).query(async ({ input }) => {
+        const id = input
+        const profile = await prisma.profile.findUnique({
+            where: {
+                id
+            },
+            include: {
+                books: {
+                    select: {
+                        book: true
+                    }
+                }
+            }
         })
+
+        if (!profile) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: `User not found`
+            })
+        }
+
+        return profile
+    })
+
 });
 
 

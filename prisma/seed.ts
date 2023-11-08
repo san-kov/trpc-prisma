@@ -3,9 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
 async function main() {
-    prisma.profile.create({
+    const profile = await prisma.profile.create({
         data: {
-            username: "qweqweqwe"
+            username: "qwe2qweqwe22"
         }
     })
     const newAuthor = await prisma.author.create({
@@ -19,7 +19,7 @@ async function main() {
 
     const newBook = await prisma.book.create({
         data: {
-            title: "Molloy",
+            title: "Moll2oy1232",
             author: {
                 connect: newAuthor
             },
@@ -29,7 +29,7 @@ async function main() {
         }
     })
 
-    console.log(newAuthor, newBook)
+    console.log(newAuthor, newBook, profile)
 
 }
 

@@ -15,17 +15,25 @@ const trpc = createTRPCProxyClient<AppRouter>({
 });
 
 const testApi = createTestApi(trpc);
-const { addBookToLibrary } = testApi;
+const { addBookToLibrary, addReadingSession } = testApi;
 
 
 (async () => {
 
-    const myProfileId = 'e8a4099e-38db-4c0c-9d25-878617f44a38'
-    const bookId = '80690e26-da2f-4888-8fd9-e0ca3c70a230'
+    const profileId = 'a0dc14a5-a49d-4318-b889-ad9f5804eb53'
+    const bookId = 'd5075e89-f454-4be7-a737-f96ea8f9041b'
     // const library = await getMyLibrary(myProfileId)
-    await addBookToLibrary(myProfileId, bookId)
+    // await addBookToLibrary(myProfileId, bookId)
 
     // console.log(library.books)
+
+    const session = await addReadingSession({
+        bookId,
+        profileId,
+        pagesCount: 100
+    })
+
+    console.log(session)
 
 })()
 

@@ -37,6 +37,8 @@ model PersonalBook {
   completedAt DateTime?
   startedAt   DateTime?
   pagesDone   Int       @default(0)
+
+  @@unique([profileId, bookId], name: "personalBookId")
 }
 
 model BookList {

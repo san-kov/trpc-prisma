@@ -81,6 +81,39 @@ const appRouter = router({
         }
 
         return profile
+    }),
+    addReadingSession: publicProcedure.input(z.object({
+        pagesCount: z.number().int(),
+        bookId: z.string(),
+        profileId: z.string(),
+    })).query(async ({ input: { pagesCount, bookId, profileId } }) => {
+        const personalBook = await prisma.personalBook.findFirst({
+            where: {
+                AND: [
+                    { bookId },
+                    { profileId }
+                ]
+            },
+            select: { id: true }
+        })
+
+        if (!personalBook) {
+            throw new TRPCError({
+                code: "NOT_FOUND",
+                message: `Book not found`
+            })
+        }
+
+        const updatedBook = await prisma.personalBook.update({
+            where: { id: personalBook!.id },
+            data: {
+                pagesDone: {
+                    increment: pagesCount
+                }
+            },
+        })
+
+        return updatedBook
     })
 
 });

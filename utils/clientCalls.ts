@@ -15,6 +15,18 @@ export function createTestApi(trpc: TRPCType) {
 
         async getMyLibrary(profileId: string) {
             return trpc.getMyLibrary.query(profileId)
+        },
+
+        async addReadingSession({
+            pagesCount,
+            profileId,
+            bookId
+        }: { pagesCount: number, profileId: string, bookId: string }) {
+            return trpc.addReadingSession.query({
+                pagesCount,
+                profileId,
+                bookId
+            })
         }
     })
 }

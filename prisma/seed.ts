@@ -3,11 +3,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient()
 
 async function main() {
-    const profile = await prisma.profile.create({
-        data: {
-            username: "qwe2qweqwe22"
-        }
-    })
     const newAuthor = await prisma.author.create({
         data: {
             fullName: "Samuel Beckett",
@@ -17,9 +12,15 @@ async function main() {
         }
     })
 
-    const newBook = await prisma.book.create({
+    const profilePromise = prisma.profile.create({
         data: {
-            title: "Moll2oy1232",
+            username: "sankov"
+        }
+    })
+
+    const bookPromise = prisma.book.create({
+        data: {
+            title: "Molloy",
             author: {
                 connect: newAuthor
             },
@@ -29,7 +30,7 @@ async function main() {
         }
     })
 
-    console.log(newAuthor, newBook, profile)
+    await Promise.all([profilePromise, bookPromise])
 
 }
 

@@ -34,12 +34,21 @@ const appRouter = router({
                 })
             }
 
-            await prisma.booksOnProfiles.create({
+            const addBookPromise = prisma.booksOnProfiles.create({
                 data: {
                     bookId,
                     profileId
                 }
             })
+
+            const addPersonalBookPromise = prisma.personalBook.create({
+                data: {
+                    bookId,
+                    profileId,
+                }
+            })
+
+            await Promise.all([addBookPromise, addPersonalBookPromise])
 
             return book
         }),

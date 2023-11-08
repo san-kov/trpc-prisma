@@ -35,6 +35,7 @@ model PersonalBook {
   profileId   String?
   completed   Boolean   @default(false)
   completedAt DateTime?
+  startedAt   DateTime?
   pagesDone   Int       @default(0)
 }
 

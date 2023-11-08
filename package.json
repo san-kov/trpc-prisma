@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "npx ts-node client/index.ts",
-    "server": "npx ts-node index.ts"
+    "server": "npx ts-node index.ts",
+    "db:update": "npx prisma generate",
+    "db:migrate": "npx prisma migrate dev",
+    "db:wipe": "npx prisma db push --force-reset",
+    "db:seed": "npx prisma db seed"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

@@ -3,18 +3,18 @@ import { TRPCType } from "../client"
 export function createTestApi(trpc: TRPCType) {
     return ({
         async getBooksList() {
-            return trpc.booksList.query()
+            return trpc.books.booksList.query()
         },
 
         async addBookToLibrary(profileId: string, bookId: string) {
-            return trpc.addToLibrary.query({
+            return trpc.library.addToLibrary.mutate({
                 profileId,
                 bookId
             })
         },
 
         async getMyLibrary(profileId: string) {
-            return trpc.getMyLibrary.query(profileId)
+            return trpc.library.getMyLibrary.query(profileId)
         },
 
         async addReadingSession({
@@ -22,7 +22,7 @@ export function createTestApi(trpc: TRPCType) {
             profileId,
             bookId
         }: { pagesCount: number, profileId: string, bookId: string }) {
-            return trpc.addReadingSession.query({
+            return trpc.library.addReadingSession.mutate({
                 pagesCount,
                 profileId,
                 bookId

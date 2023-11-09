@@ -28,11 +28,10 @@ model Author {
 }
 
 model PersonalBook {
-  id          String    @id @default(uuid())
   book        Book      @relation(fields: [bookId], references: [id])
   bookId      String
   Profile     Profile?  @relation(fields: [profileId], references: [id])
-  profileId   String?
+  profileId   String
   completed   Boolean   @default(false)
   completedAt DateTime?
   startedAt   DateTime?
